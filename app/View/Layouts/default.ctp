@@ -29,7 +29,10 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css('cake.generic');
-
+        echo $this->Html->css('jquery.ui.stars');
+        echo $this->Html->css('jquery.ui.stars.min');
+        echo $this->Html->script('jquery.ui.stars');
+        echo $this->Html->script('jquery.ui.stars.min');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
@@ -37,8 +40,21 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 </head>
 <body>
 	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
+	    <div id="header">
+    			<table width="100%">
+    			<tr><td><?php
+                      echo $this->HTML->link('Home', array('controller' => 'topics', 'action' => 'index'));
+                    ?></td><td>
+                    <td><?php
+                        echo $this->HTML->link('Posts', array('controller' => 'posts', 'action' => 'index'));
+                    ?></td><td>
+    			<div align = "right"><?php
+                    if(AuthComponent::user()){
+                        echo $this->HTML->link('Logout', array('controller' => 'users', 'action' => 'logout'));
+                    }else{
+                        echo $this->HTML->link('Login', array('controller' => 'users', 'action' => 'login'));
+                    }
+                ?></div></td></tr></table>
 		</div>
 		<div id="content">
 
@@ -60,4 +76,5 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
 </body>
+	<?php echo $this->Js->writeBuffer(); ?>
 </html>

@@ -3,14 +3,19 @@
 
 class PostsController extends AppController {
 
-    public $helpers = array('Html', 'Form', 'Session');
+    public $helpers = array('Html', 'Form', 'Session','Ratings.Rating');
     public $components = array('Session','Auth','Search.Prg','Ratings.Ratings');
-       
-     public function index() {
+    public $actsAs = array('Ratings.Ratable');
+
+
+    public function index() {
         
         $data = $this->Post->find('all');
         $this->set('posts',$data);
-            
+        //rating params
+       /** $options = array('conditions' => array('Post.' . $this->Post->primaryKey =>$id));
+        $this->set('posts', $this->Post->find('first', $options));
+        $this->set('isRated', $this->Post->isRatedBy($id, $this->Auth->user('id')));**/
 	}
     
     public function add($id){

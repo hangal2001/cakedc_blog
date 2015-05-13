@@ -65,8 +65,8 @@ class TopicsController extends AppController {
     
     }
     public function view($id){
-    
-    
+
+
         $data = $this->Topic->findById($id);
         $this->set('topics', $data);
     
