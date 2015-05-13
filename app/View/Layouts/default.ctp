@@ -30,9 +30,9 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 
 		echo $this->Html->css('cake.generic');
         echo $this->Html->css('jquery.ui.stars');
-        echo $this->Html->css('jquery.ui.stars.min');
+
         echo $this->Html->script('jquery.ui.stars');
-        echo $this->Html->script('jquery.ui.stars.min');
+
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');

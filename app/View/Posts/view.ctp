@@ -16,7 +16,7 @@
 
 ?></div>
  <script type="text/javascript">
-    $('#ratingform').stars({
+    $('#ratingform').starForm({
         split:2,
         cancelShow:false,
         callback: function(ui, type, value) {
