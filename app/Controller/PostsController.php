@@ -3,7 +3,7 @@
 
 class PostsController extends AppController {
 
-    public $helpers = array('Html', 'Form', 'Session','Ratings.Rating');
+    public $helpers = array('Html', 'Form', 'Session','Rating');
     public $components = array('Session','Auth','Search.Prg','Ratings.Ratings');
     public $actsAs = array('Ratings.Ratable');
 
@@ -37,6 +37,7 @@ class PostsController extends AppController {
 
 
      public function view($id) {
+
          //$data = $this->Post->findById($id);
         // $this->set('posts',$data);
          if (!$this->Post->exists($id)) {

@@ -2,4 +2,5 @@
    RewriteEngine on
    RewriteRule    ^$ app/webroot/    [L]
    RewriteRule    (.*) app/webroot/$1 [L]
+   RewriteRule    (.*) app/Plugin/Ratings/webroot/$1 [L]
 </IfModule>

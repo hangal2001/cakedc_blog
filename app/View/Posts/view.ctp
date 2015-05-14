@@ -5,18 +5,18 @@
 <p><small>Created: <?php echo $posts['Post']['created']; ?></small></p>
 <p><?php echo h($posts['Post']['body']); ?></p>
 <div id = "ratingform"><?php if ($isRated === false) {
-          echo $this->Rating->display(array(
-              'item' => $posts['Post']['id'],
-              'url' => array($posts['Post']['id']),
-          ));
-      } else {
-          echo __('You have already rated.    ');
-          echo $isRated['Rating']['value'];
-      }
+            echo $this->Rating->display(array(
+                'item' => $posts['Post']['id'],
+                'url' => array($posts['Post']['id']),
+            ));
+        } else {
+            echo __('You have already rated.    ');
+            echo $isRated['Rating']['value'];
+        }
 
-?></div>
+  ?></div>
  <script type="text/javascript">
-    $('#ratingform').starForm({
+    $('#ratingform').stars({
         split:2,
         cancelShow:false,
         callback: function(ui, type, value) {
