@@ -1,0 +1,1 @@
+<?php echo $this->element('comments',array('data'=>$modelData,'type'=>'MyModel')) ?>

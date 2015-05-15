@@ -27,19 +27,22 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
+        echo $this->Html->css('cake.generic');
 
-		echo $this->Html->css('cake.generic');
+        echo $this->Html->script('/Ratings/js/jquery-1.6.2.min');
+        echo $this->Html->script('/Ratings/js/jquery.ui.core');
+        echo $this->Html->script('/Ratings/js/jquery.ui.widget');
+
+        echo $this->Html->script('/Ratings/js/jquery.ui.stars');
+
+
+         echo $this->Html->css('/Ratings/css/jquery.ui.stars.css');
 
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
-		/** echo $this->Html->script('/Ratings/js/jquery-1.6.2.min');
-		echo $this->Html->script('/Ratings/js/jquery.ui.core');
-		echo $this->Html->script('/Ratings/js/jquery.ui.widget');
-        echo $this->Html->script('/Ratings/js/jquery.ui.stars');
-		echo $this->Html->css('/Ratings/css/jquery.ui.stars.css');
-        echo $this->Html->css('/Ratings/css/jquery.ui.stars.min.css');**/
+
 	?>
 </head>
 <body>
@@ -72,6 +75,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 					'http://www.cakephp.org/',
 					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
 				);
+
 			?>
 			<p>
 				<?php echo $cakeVersion; ?>

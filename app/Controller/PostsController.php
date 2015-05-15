@@ -3,10 +3,11 @@
 
 class PostsController extends AppController {
 
-    public $helpers = array('Html', 'Form', 'Session','Rating');
-    public $components = array('Session','Auth','Search.Prg','Ratings.Ratings');
+    public $helpers = array('Html', 'Form', 'Session','Ratings.Rating');
+    public $components = array('Session','Auth','Search.Prg','Ratings.Ratings','Comments.Comments' => array(
+        'userModelClass' => 'Users.User' // Customize the User class
+    ));
     public $actsAs = array('Ratings.Ratable');
-
 
     public function index() {
         
@@ -36,8 +37,10 @@ class PostsController extends AppController {
     }
 
 
-     public function view($id) {
 
+     public function view($id) {
+        // $fullName = 'PLuginName.Post'; if comment used in post of plugin
+         $this->set('posts', $this->Post->read(null, $id));
          //$data = $this->Post->findById($id);
         // $this->set('posts',$data);
          if (!$this->Post->exists($id)) {
@@ -49,5 +52,6 @@ class PostsController extends AppController {
          $this->set('isRated', $this->Post->isRatedBy($id, $this->Auth->user('id')));
 
      }
+
 }
 ?>

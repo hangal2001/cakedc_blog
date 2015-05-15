@@ -68,6 +68,7 @@ Cache::config('default', array('engine' => 'File'));
  **/
 //CakePlugin::loadAll();
 
+CakePlugin::load('Comments');
 CakePlugin::load('Search');
 CakePlugin::load('Ratings');
 CakePlugin::load('Tags');
