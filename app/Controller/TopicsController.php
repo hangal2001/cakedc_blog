@@ -1,9 +1,11 @@
 <?php
+
 class TopicsController extends AppController {
-    
-   
+
+    public $plugin = 'MyPlugin';
     public $helpers = array('Html', 'Form', 'Session','I18n.I18n');
     public $components = array('Session','Auth','Search.Prg');
+
 
     public function find() {
         $this->Prg->commonProcess();

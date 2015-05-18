@@ -9,6 +9,25 @@ class PostsController extends AppController {
     ));
     public $actsAs = array('Ratings.Ratable');
 
+    public function callback_commentsAdd($modelId, $commentId, $displayType, $data = array()) {
+        if (!empty($this->request->data)) {
+
+            ///perform some validation and field manipulations here. all value need to store into the $data.
+            $data['Comment']['author_name'] = $this->Auth->user('username');
+            $data['Comment']['author_email'] = $this->Auth->user('email');
+
+            $valid = true;
+            if (empty($this->request->data['Comment']['author_name'])) {
+                $valid = false;
+            }
+            if (!$valid) {
+                $this->Session->setFlash(__('Please enter necessery information', true));
+                return;
+            }
+
+        }
+        return $this->Comments->callback_add($modelId, $commentId, $displayType, $data);
+    }
 
 
     public function index() {
@@ -22,10 +41,10 @@ class PostsController extends AppController {
 	}
     
     public function add($id){
-           
+
        $this->request->data['Post']['topic_id'] = $id;
            
-        if ($this->request->is('posts')) {
+        if ($this->request->is('post')) {
             $this->Post->create();
             if ($this->Post->save($this->request->data)) {
                 $this->Session->setFlash(__('Your post has been saved.'));
