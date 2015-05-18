@@ -1,0 +1,3 @@
+[submodule "app/app/Plugin/I18"]
+	path = app/app/Plugin/I18
+	url = https://github.com/CakeDC/i18n.git

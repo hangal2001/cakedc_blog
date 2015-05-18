@@ -68,8 +68,10 @@ Cache::config('default', array('engine' => 'File'));
  **/
 //CakePlugin::loadAll();
 
-CakePlugin::load('Comments');
+CakePlugin::load('DebugKit');
 CakePlugin::load('Search');
+CakePlugin::load('Migrations');
+CakePlugin::load('Comments');
 CakePlugin::load('Ratings');
 CakePlugin::load('Tags');
 CakePlugin::load('Users', array(
@@ -126,3 +128,12 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+// Languages
+
+define('DEFAULT_LANGUAGE', 'eng');
+Configure::write('Config.languages', array('eng', 'deu', 'fre', 'jpn', 'spa', 'rus'));
+CakePlugin::load('I18n', array(
+    'routes' => true
+));
+

@@ -2,7 +2,7 @@
 class TopicsController extends AppController {
     
    
-    public $helpers = array('Html', 'Form', 'Session');
+    public $helpers = array('Html', 'Form', 'Session','I18n.I18n');
     public $components = array('Session','Auth','Search.Prg');
 
     public function find() {
@@ -17,10 +17,12 @@ class TopicsController extends AppController {
     }
 
 
+
     public $presetVars = array(
         'title' => array(
             'type' => 'value'
         ),
+        array('category2' => 'category', 'type' => 'value'),
         'email' => array(
             'type' => 'like',
             'field' => 'email'
@@ -43,7 +45,6 @@ class TopicsController extends AppController {
     }
     public function index() {
 
-       // $data = $this->Topic->find('all');
         $this->set('topics', $this->Topic->find('all'));
         $this->Prg->commonProcess();
         $this->paginate = array(
@@ -66,9 +67,9 @@ class TopicsController extends AppController {
     }
     public function view($id){
 
-
         $data = $this->Topic->findById($id);
         $this->set('topics', $data);
+       // $this->set('posts', $this->Post->read(null, $id));
     
     }
    public function edit($id){

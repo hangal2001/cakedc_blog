@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+
 /**
  * Topic Model
  *
@@ -19,6 +20,7 @@ class Topic extends AppModel {
     );
 
     public $filterArgs = array(
+
         'title' => array(
             'type' => 'like'
         ),
@@ -37,8 +39,8 @@ class Topic extends AppModel {
         ),
         'range' => array(
             'type' => 'expression',
-            'method' => 'makeRangeCondition',
-            'field' => 'Article.views BETWEEN ? AND ?'
+            'method' => 'CreationDateRangeCondition',
+            'field' => 'Topic.created BETWEEN ? AND ?'
         ),
         'username' => array(
             'type' => 'like', 'field' => array(
@@ -79,6 +81,31 @@ class Topic extends AppModel {
             )
         );
         return $conditions;
+    }
+
+    public function CreationDateRangeCondition($data = array()){
+        if(strpos($data['range'], ' - ') !== false){
+            $tmp = explode(' - ', $data['range']);
+            $tmp[0] = $tmp[0]."-01-01";
+            $tmp[1] = $tmp[1]."-12-31";
+            return $tmp;
+        }else{
+            return array($data['range']."-01-01", $data['range']."-12-31");
+        }
+
+    }
+
+    public function filterCategory($data, $field = null) {
+        if (empty($data['category2'])) {
+            return array();
+        }
+        $categoryField = '%' . $data['category2'] . '%';
+        return array(
+            'OR' => array(
+                $this->alias . '.category LIKE' => $categoryField,
+            ));
+
+
     }
 /**
  * Validation rules

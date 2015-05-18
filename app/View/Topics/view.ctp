@@ -10,4 +10,6 @@
         echo "<tr><td>".$counter."</td><td>".$post['user_id']."</td><td>".$post['body']."</td></tr>";
     $counter++;
     }
+
 ?>
+

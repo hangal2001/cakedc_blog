@@ -5,9 +5,11 @@ class PostsController extends AppController {
 
     public $helpers = array('Html', 'Form', 'Session','Ratings.Rating');
     public $components = array('Session','Auth','Search.Prg','Ratings.Ratings','Comments.Comments' => array(
-        'userModelClass' => 'Users.User' // Customize the User class
+        'userModelClass' => '' // Customize the User class
     ));
     public $actsAs = array('Ratings.Ratable');
+
+
 
     public function index() {
         
@@ -39,8 +41,8 @@ class PostsController extends AppController {
 
 
      public function view($id) {
-        // $fullName = 'PLuginName.Post'; if comment used in post of plugin
-         $this->set('posts', $this->Post->read(null, $id));
+        // $fullName = 'PLuginName.Post'; if comment used in post of pluin
+
          //$data = $this->Post->findById($id);
         // $this->set('posts',$data);
          if (!$this->Post->exists($id)) {

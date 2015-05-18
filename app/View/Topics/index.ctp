@@ -4,12 +4,50 @@
 <?php echo $this->HTML->link('Create a topic', array('controller' => 'topics', 'action'=> 'add')); ?>
 <br>
 <?php
+
+    echo $this->I18n->flagSwitcher(array(
+    	'class' => 'languages',
+    	'id' => 'language-switcher'
+    ));
+
     $searchItem = "title";
     echo $this->Form->create();
     echo $this->Form->input($searchItem);
     echo $this->Form->input('visible', array(
             'type' => 'checkbox'
         ));
+    echo $this->Form->input('from', array(
+            'type' => 'date',
+            //'div' => false,
+            'dateFormat' => 'MDY',
+            'minYear' => 2013,
+            'maxYear' => date('Y'),
+            'style' => 'margin-right: 2px; margin-left: 2px',
+            'empty' => true,
+            'timeFormat' => null,
+            'selected' => array(
+                'day' => 1,
+                'month' => 5,
+                'year' => 2014
+                ),
+            'empty' => false
+            ));
+             echo $this->Form->input('to', array(
+            'type' => 'date',
+            'div' => false,
+            'dateFormat' => 'MDY',
+            'minYear' => 2013,
+            'maxYear' => date('Y'),
+            'empty' => true,
+            'style' => 'margin-right: 2px; margin-left: 2px',
+            'timeFormat' => null,
+            'selected' => array(
+                'day' => date('D'),
+                'month' => date('M'),
+                'year' => date('Y')
+                ),
+            'empty' => false
+            ));
     echo $this->Form->end(__('Search'));
     ?>
 
@@ -40,6 +78,7 @@
 
 <?php unset($topic);?>
 </table>
+
  <p>
 <?php echo $this->Html->link('new post', array('controller'=>'topics','action'=>'add'));?>
 </p>
