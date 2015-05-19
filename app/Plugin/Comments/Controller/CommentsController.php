@@ -9,13 +9,14 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('CommentsAppController', 'Comments.Controller');
-
 /**
  * Comments Controller
  *
  * @package comments
  * @subpackage comments.controllers
- *
+ */
+
+/**
  * @property Comment $Comment
  * @property PrgComponent $Prg
  * @property SessionComponent  $Session
@@ -50,19 +51,14 @@ class CommentsController extends CommentsAppController {
  *
  * @var array
  */
-	public $helpers = array(
-		'Text',
-		'Time'
-	);
+	public $helpers = array('Text', 'Time');
 
 /**
  * Uses
  *
  * @var array
  */
-	public $uses = array(
-		'Comments.Comment'
-	);
+	public $uses = array('Comments.Comment');
 
 /**
  * Preset for search views
@@ -78,51 +74,23 @@ class CommentsController extends CommentsAppController {
  * @return void
  */
 	public function admin_index($type = '') {
+		$this->presetVars = array(
+			array('field' => 'approved', 'type' => 'value'),
+			array('field' => 'is_spam', 'type' => 'value'));
+
 		$this->Comment->recursive = 0;
 		$this->Comment->bindModel(array(
 			'belongsTo' => array(
 				'UserModel' => array(
 					'className' => 'Users.User',
-					'foreignKey' => 'user_id'
-				)
-			)
-		), false);
-
-		$conditions = $this->_adminIndexSearch();
-
-		$this->Paginator->settings = array(
-			'Comment' => array(
-				'conditions' => $conditions,
-				'contain' => array(
-					'UserModel'
-				),
-				'order' => 'Comment.created DESC'
-			)
-		);
-
-		if ($type == 'spam') {
-			$this->Paginator->settings['Comment']['conditions'] = array('Comment.is_spam' => array('spam', 'spammanual'));
-		} elseif ($type == 'clean') {
-			$this->Paginator->settings['Comment']['conditions'] = array('Comment.is_spam' => array('ham', 'clean'));
-		}
-
-		$this->set('comments', $this->Paginator->paginate('Comment'));
-	}
-
-/**
- * Checks if the CakeDC Search plugin is present and if yes loads the PRG component
- *
- * @return array Conditions for the pagination
- */
-	protected function _adminIndexSearch() {
+					'foreignKey' => 'user_id'))), false);
 		$conditions = array();
-		if (class_exists('PrgComponent')) {
+
+		if (App::import('Component', 'Search.Prg')) {
 			$this->Comment->Behaviors->load('Search.Searchable');
 			$this->Comment->filterArgs = array(
 				array('field' => 'is_spam', 'name' => 'is_spam', 'type' => 'value'),
-				array('field' => 'approved', 'name' => 'approved', 'type' => 'value')
-			);
-
+				array('field' => 'approved', 'name' => 'approved', 'type' => 'value'));
 			$this->presetVars = true;
 			$this->Prg = new PrgComponent($this->Components, array());
 			$this->Prg->initialize($this);
@@ -130,7 +98,19 @@ class CommentsController extends CommentsAppController {
 			$conditions = $this->Comment->parseCriteria($this->passedArgs);
 			$this->set('searchEnabled', true);
 		}
-		return $conditions;
+
+		$this->Paginator->settings = array(
+			'Comment' => array(
+				'conditions' => $conditions,
+				'contain' => array('UserModel'),
+				'order' => 'Comment.created DESC'));
+		if ($type == 'spam') {
+			$this->Paginator->settings['Comment']['conditions'] = array('Comment.is_spam' => array('spam', 'spammanual'));
+		} elseif ($type == 'clean') {
+			$this->Paginator->settings['Comment']['conditions'] = array('Comment.is_spam' => array('ham', 'clean'));
+		}
+
+		$this->set('comments', $this->Paginator->paginate('Comment'));
 	}
 
 /**
@@ -143,14 +123,14 @@ class CommentsController extends CommentsAppController {
 		if (!empty($this->request->data)) {
 			try {
 				$message = $this->Comment->process($this->request->data['Comment']['action'], $this->request->data);
-			} catch (Exception $e) {
-				$message = $e->getMessage();
+			} catch (Exception $ex) {
+				$message = $ex->getMessage();
 			}
 			$this->Comments->flash($message);
 		}
 		$url = array('plugin' => 'comments', 'action' => 'index', 'admin' => true);
-		$url = Hash::merge($url, $this->request->params['pass']);
-		$this->redirect(Hash::merge($url, $this->request->params['named']));
+		$url = Set::merge($url, $this->request->params['pass']);
+		$this->redirect(Set::merge($url, $this->request->params['named']));
 	}
 
 /**
@@ -197,7 +177,7 @@ class CommentsController extends CommentsAppController {
 		$comment = $this->Comment->read(null, $id);
 		if (empty($comment)) {
 			$this->Comments->flash(__d('comments', 'Invalid Comment.'));
-			return $this->redirect(array('action' => 'index'));
+			return $this->redirect(array('action'=>'index'));
 		}
 		$this->set('comment', $comment);
 	}
@@ -255,8 +235,7 @@ class CommentsController extends CommentsAppController {
 		$this->Paginator->settings = array(
 			'conditions' => $conditions,
 			'order' => 'Comment.created DESC',
-			'limit' => $amount
-		);
+			'limit' => $amount);
 
 		$this->set('comments', $this->Paginator->paginate());
 		$this->set('userId', $userId);

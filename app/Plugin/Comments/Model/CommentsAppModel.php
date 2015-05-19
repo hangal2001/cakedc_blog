@@ -10,6 +10,8 @@
  */
 App::uses('AppModel', 'Model');
 
+CakePlugin::load('Utils');
+ 
 /**
  * Comments AppModel
  *
@@ -17,4 +19,10 @@ App::uses('AppModel', 'Model');
  */
 class CommentsAppModel extends AppModel {
 
+/**
+ * Plugin name
+ *
+ * @var string $plugin
+ */
+	public $plugin = 'Comments';
 }

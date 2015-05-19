@@ -9,7 +9,9 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
+
 <div class="users index">
+
 	<h2><?php echo __d('users', 'Login'); ?></h2>
 	<?php echo $this->Session->flash('auth');?>
 	<fieldset>
@@ -31,4 +33,5 @@
 		?>
 	</fieldset>
 </div>
-<?php echo $this->element('Users.Users/sidebar'); ?>
+<?php
+ echo $this->element('Users.Users/sidebar'); ?>

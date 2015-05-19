@@ -17,8 +17,7 @@ foreach (array('page', 'order', 'sort', 'direction') as $named) {
 }
 if ($target) {
 	$_url['action'] = str_replace(Configure::read('Routing.admin') . '_', '', 'comments');
-	$options = array_merge($_url, array('comment' => $comment, '#' => 'comment' . $comment));
-	$ajaxUrl = $this->CommentWidget->prepareUrl($options);
+	$ajaxUrl = $this->CommentWidget->prepareUrl(array_merge($_url, array('comment' => $comment, '#' => 'comment' . $comment)));
 	echo $this->Form->create($modelName, array('url' => $ajaxUrl, 'target' => $target));
 } else {
 	echo $this->Form->create($modelName, array('url' => array_merge($_url, array('comment' => $comment, '#' => 'comment' . $comment))));

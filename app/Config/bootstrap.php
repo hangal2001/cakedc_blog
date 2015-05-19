@@ -24,7 +24,7 @@
 
 // Setup a 'default' cache configuration for use in the application.
 Cache::config('default', array('engine' => 'File'));
-//CakePlugin::load('DebugKit');
+CakePlugin::load('DebugKit');
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
  *
@@ -68,7 +68,7 @@ Cache::config('default', array('engine' => 'File'));
  **/
 //CakePlugin::loadAll();
 
-CakePlugin::load('DebugKit');
+
 CakePlugin::load('Search');
 CakePlugin::load('Migrations');
 CakePlugin::load('Comments');
@@ -132,7 +132,7 @@ CakeLog::config('error', array(
 // Languages
 
 define('DEFAULT_LANGUAGE', 'eng');
-Configure::write('Config.languages', array('eng', 'deu', 'fre', 'jpn', 'spa', 'rus'));
+Configure::write('Config.languages', array('eng', 'deu', 'fre', 'jpn', 'spa', 'rus','mn'));
 CakePlugin::load('I18n', array(
     'routes' => true
 ));

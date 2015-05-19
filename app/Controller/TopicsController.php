@@ -1,11 +1,19 @@
 <?php
 
+
+
 class TopicsController extends AppController {
 
-    public $plugin = 'MyPlugin';
-    public $helpers = array('Html', 'Form', 'Session','I18n.I18n');
-    public $components = array('Session','Auth','Search.Prg');
+    public $helpers = array('Html', 'Form', 'Session','Time','Text','I18n.I18n');
+    public $components = array('Session','Auth','Cookie','Paginator','Security','Search.Prg','Comments.Comments' =>
+array('userModelClass' => 'Users.users'));
 
+    public $actsAs = array(
+        'Translate'=> array(
+            'title'
+        ));
+
+    public $translateTable = 'post_translations';
 
     public function find() {
         $this->Prg->commonProcess();
@@ -13,12 +21,22 @@ class TopicsController extends AppController {
         $this->set('topics', $this->Paginator->paginate());
     }
 
+
     public function beforeFilter(){
   
-    $this->Auth->allow('index');
+        $this->Auth->allow('index');
+
+        parent::beforeFilter();
+        $this->Comments->viewVariable = 'topics';
+
     }
 
-
+    public function url($url = null, $full = false) {
+        if (is_array($url) && !array_key_exists('lang', $url)) {
+            $url['lang'] = Configure::read('Config.language');
+        }
+        return parent::url($url, $full);
+    }
 
     public $presetVars = array(
         'title' => array(
@@ -69,9 +87,10 @@ class TopicsController extends AppController {
     }
     public function view($id){
 
-        $data = $this->Topic->findById($id);
-        $this->set('topics', $data);
-       // $this->set('posts', $this->Post->read(null, $id));
+       // $this->set('topics', $this->Topic->read($id));
+       $data = $this->Topic->findById($id);
+       $this->set('topics', $data);
+       //$this->set('topics', $this->Topic->read(null, $id));
     
     }
    public function edit($id){

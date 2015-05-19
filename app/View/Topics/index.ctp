@@ -3,11 +3,11 @@
 </br>
 <?php echo $this->HTML->link('Create a topic', array('controller' => 'topics', 'action'=> 'add')); ?>
 <br>
-<?php
 
+<?php
     echo $this->I18n->flagSwitcher(array(
-    	'class' => 'languages',
-    	'id' => 'language-switcher'
+        'class' => 'languages',
+        'id' => 'language-switcher'
     ));
 
     $searchItem = "title";
@@ -54,7 +54,7 @@
 
 <table>
 <tr>
-    <th>Title</th>
+    <th><?php echo __('title'); ?></th>
     <th>User ID</th>
     <th>Published</th>
     <th>Created</th>

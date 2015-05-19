@@ -56,12 +56,7 @@ class CommentsComponent extends Component {
  *
  * @var array $components
  */
-	public $components = array(
-		'Cookie',
-		'Session',
-		'Auth',
-		'Paginator'
-	);
+	public $components = array('Cookie', 'Session', 'Auth');
 
 /**
  * Enabled
@@ -84,9 +79,7 @@ class CommentsComponent extends Component {
  *
  * @var array $actionNames
  */
-	public $actionNames = array(
-		'view', 'comments'
-	);
+	public $actionNames = array('view', 'comments');
 
 /**
  * Actions used for deleting of some model record, which doesn't use SoftDelete
@@ -205,12 +198,7 @@ class CommentsComponent extends Component {
  *
  * @var array
  */
-	protected $_supportNamedParams = array(
-		'comment',
-		'comment_action',
-		'comment_view_type',
-		'quote'
-	);
+	protected $_supportNamedParams = array('comment', 'comment_action', 'comment_view_type', 'quote');
 
 /**
  * Constructor.
@@ -220,7 +208,7 @@ class CommentsComponent extends Component {
  * @return CommentsComponent
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
-		parent::__construct($collection, $settings);
+		parent::__construct($collection, $settings); 
 		foreach ($settings as $setting => $value) {
 			if (isset($this->{$setting})) {
 				$this->{$setting} = $value;
@@ -253,6 +241,7 @@ class CommentsComponent extends Component {
 		$this->modelAlias = $controller->{$this->modelName}->alias;
 		$this->viewVariable = Inflector::variable($this->modelName);
 		$controller->helpers = array_merge($controller->helpers, array('Comments.CommentWidget', 'Time', 'Comments.Cleaner', 'Comments.Tree'));
+
 		if (!$controller->{$this->modelName}->Behaviors->attached('Commentable')) {
 			$controller->{$this->modelName}->Behaviors->attach('Comments.Commentable', array('userModelAlias' => $this->userModel, 'userModelClass' => $this->userModelClass));
 		}
@@ -336,7 +325,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Handles controllers actions like list/add related comments
+ * Handle controllers action like list/add related comments
  *
  * @param string $displayType
  * @param bool   $processActions
@@ -346,7 +335,7 @@ class CommentsComponent extends Component {
 	public function callback_view($displayType, $processActions = true) {
 		if (!isset($this->Controller->{$this->modelName}) ||
 			(!array_key_exists($this->assocName, array_merge($this->Controller->{$this->modelName}->hasOne, $this->Controller->{$this->modelName}->hasMany)))) {
-			throw new RuntimeException('CommentsComponent: model ' . $this->modelName . ' or association ' . $this->assocName . ' doesn\'t exist');
+			throw new RuntimeException('CommentsComponent: model ' . $this->modelName .  ' or association ' . $this->assocName . ' doesn\'t exist');
 		}
 
 		$primaryKey = $this->Controller->{$this->modelName}->primaryKey;
@@ -370,7 +359,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Paginateable tree representation of the comment data.
+ * Tree representation. Paginable.
  *
  * @param array $options
  * @return array
@@ -395,7 +384,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Flat representation of the comment data.
+ * Flat representaion. Paginable
  *
  * @param array $options
  * @return array
@@ -409,7 +398,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Threaded comment data, one-paginateable, the whole data is fetched.
+ * Threaded method - non paginable, whole data is fetched
  *
  * @param array $options
  * @return array
@@ -436,7 +425,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Default method, calls callback_fetchData
+ * Default method. Flat method called.
  *
  * @param array $options
  * @return array
@@ -460,7 +449,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Prepare passed parameters.
+ * Prepare passed parameters
  *
  * @return void
  */
@@ -542,7 +531,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Fetch and format a comment message.
+ * Fetch and format comment message
  *
  * @param string $commentId
  * @return string
@@ -561,7 +550,7 @@ class CommentsComponent extends Component {
 	}
 
 /**
- * Handles approval of comments.
+ * Handle approval of comments
  *
  * @param string $modelId
  * @param string $commentId
@@ -571,7 +560,7 @@ class CommentsComponent extends Component {
 	public function callback_toggleApprove($modelId, $commentId) {
         if (!isset($this->Controller->passedArgs['comment_action'])
 			|| !($this->Controller->passedArgs['comment_action'] == 'toggle_approve' && $this->Controller->Auth->user('is_admin') == true)) {
-			throw new BlackHoleException(__d('comments', 'Nonrestricted operation'));
+			 throw new BlackHoleException(__d('comments', 'Nonrestricted operation'));
 		}
 		if ($this->Controller->{$this->modelName}->commentToggleApprove($commentId)) {
 			$this->flash(__d('comments', 'The Comment status has been updated.'));
@@ -724,16 +713,14 @@ class CommentsComponent extends Component {
 /**
  * Wrapping method to clean incoming html contents
  *
- * @deprecated This is going to be removed in the near future
  * @param string $text
  * @param string $settings
  * @return string
  */
-	public function cleanHtml($text, $settings = 'full') {
+	function cleanHtml($text, $settings = 'full') {
 		App::import('Helper', 'Comments.Cleaner');
 		$cleaner = & new CleanerHelper(new View($this->Controller));
 		return $cleaner->clean($text, $settings);
 	}
-
 }
 
