@@ -64,8 +64,7 @@
         <th><?php echo $this->Paginator->sort('Published'); ?></th>
         <th><?php echo $this->Paginator->sort('Created'); ?></th>
         <th><?php echo $this->Paginator->sort('Modified'); ?></th>
-        <th>edit</th>
-        <th>delete</th>
+        <th class="actions"><?php echo __d('users', 'Actions'); ?></th>
 </tr>
 <?php
 	$i = 0; ?>
@@ -81,8 +80,9 @@
     <td><?php echo $topic['Topic']['visible']; ?></td>
     <td><?php echo $topic['Topic']['created']; ?></td>
     <td><?php echo $topic['Topic']['modified']; ?></td>
-    <td><?php echo $this->HTML->link('Edit', array('controller' => 'topics', 'action' => 'edit', $topic['Topic']['id'])); ?></td>
-    <td><?php echo $this->Form->postLink('Delete', array('controller' => 'topics', 'action' => 'delete', $topic['Topic']['id']),array('confirm' => 'conform delete')); ?></td>
+    <td><?php echo $this->HTML->link(__d('topics', 'Edit'), array('controller' => 'topics', 'action' => 'edit', $topic['Topic']['id'])); ?>
+        <?php echo $this->Form->postLink(__d('topics', 'Delete'), array('controller' => 'topics', 'action' => 'delete', $topic['Topic']['id']),array('confirm' => 'conform delete')); ?>
+    </td>
 </tr>
 
 <?php endforeach; ?>
