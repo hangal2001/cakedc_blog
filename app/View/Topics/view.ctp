@@ -2,7 +2,6 @@
 <?php echo $this->HTML->link('Create a post in this topic', array('controller' => 'posts', 'action'=> 'add', $topics['Topic']['id'])); ?>
 <br>
 <table>
-
     <tr><td>Sr. No.</td><td>User</td><td>Post</td></tr>
 <?php 
     $counter = 1;
@@ -15,7 +14,6 @@
 ?>
 <div id="post-comments">
     <?php $this->CommentWidget->options(array('allowAnonymousComment' => false));?>
-    <?php $this->CommentWidget->options(array('username' => 'username'));?>
     <?php echo $this->CommentWidget->display();?>
 </div>
 

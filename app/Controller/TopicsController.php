@@ -6,13 +6,19 @@ App::uses('User', 'Users.Model');
 class TopicsController extends AppController {
 
     public $helpers = array('Html', 'Form', 'Session','Time','Text','I18n.I18n');
-    public $components = array('Session','Auth','Cookie','Paginator','Security','Users.RememberMe' => array(
-        'userModel' => 'AppUser'),'Search.Prg','Comments.Comments' => array('userModelClass' => 'Users.Users'));
+    public $components = array('Session','Auth','Cookie','Paginator','Security','Search.Prg','Comments.Comments' => array('userModelClass' => 'Users.User'));
 
     public $actsAs = array(
         'Translate'=> array(
             'title'
         ));
+
+    public $paginate = array(
+        'limit' => 6,
+        'order' => array(
+            'Topics.title' => 'asc'
+        )
+    );
 
     public $translateTable = 'post_translations';
 
@@ -26,12 +32,22 @@ class TopicsController extends AppController {
     public function beforeFilter(){
 
         parent::beforeFilter();
+        $this->_setupPagination();
+        $this->set('topics', $this->modelClass);
         $this->User = ClassRegistry::init('Users.User');
         $this->Auth->allow('index');
         $this->Auth->allow('view');
-        $this->RememberMe->restoreLoginFromCookie();
         $this->Comments->viewVariable = 'topics';
 
+    }
+
+    protected function _setupPagination() {
+        $this->Paginator->settings = array(
+            'limit' => 5,
+            'order' => array(
+                'Topic.title' => 'asc'
+            )
+        );
     }
 
     public function url($url = null, $full = false) {
@@ -72,7 +88,7 @@ class TopicsController extends AppController {
         $this->Prg->commonProcess();
         $this->paginate = array(
             'conditions' => $this->Topic->parseCriteria($this->passedArgs));
-        $this->set('topics', $this->paginate());
+        $this->set('topics',$this->Paginator->paginate($this->Topic));
     }
 
     public function add(){

@@ -20,7 +20,6 @@
  */
 
 App::uses('Model', 'Model');
-
 /**
  * Application model for Cake.
  *
@@ -31,3 +30,5 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
 }
+
+

@@ -51,19 +51,30 @@
     echo $this->Form->end(__('Search'));
     ?>
 
+	<p><?php
+	echo $this->Paginator->counter(array(
+		'format' => __d('topics', 'Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%')
+	));
+	?></p>
 
-<table>
-<tr>
-    <th><?php echo __('title'); ?></th>
-    <th>User ID</th>
-    <th>Published</th>
-    <th>Created</th>
-    <th>Modified</th>
-    <th>edit</th>
-    <th>delete</th>
+	<table cellpadding="0" cellspacing="0">
+	<tr>
+        <th><?php echo $this->Paginator->sort('title'); ?></th>
+        <th><?php echo $this->Paginator->sort('User ID'); ?></th>
+        <th><?php echo $this->Paginator->sort('Published'); ?></th>
+        <th><?php echo $this->Paginator->sort('Created'); ?></th>
+        <th><?php echo $this->Paginator->sort('Modified'); ?></th>
+        <th>edit</th>
+        <th>delete</th>
 </tr>
-    
-<?php foreach($topics as $topic) : ?>
+<?php
+	$i = 0; ?>
+<?php foreach($topics as $topic) :
+        $class = null;
+		if ($i++ % 2 == 0) :
+			$class = ' class="altrow"';
+		endif;
+		?>
 <tr>
     <td><?php echo $this->HTML->link($topic['Topic']['title'], array('controller' => 'topics', 'action' => 'view', $topic['Topic']['id'])); ?></td>
     <td><?php echo $topic['Topic']['user_id']; ?></td>
@@ -78,7 +89,7 @@
 
 <?php unset($topic);?>
 </table>
-
+<?php echo $this->element('Users.pagination'); ?>
  <p>
 <?php echo $this->Html->link('new post', array('controller'=>'topics','action'=>'add'));?>
 </p>
