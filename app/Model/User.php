@@ -29,8 +29,7 @@ class User extends AppModel {
         )
     );
 
-
-/**
+    /**
  * Validation rules
  *
  * @var array

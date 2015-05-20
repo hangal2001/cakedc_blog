@@ -67,16 +67,15 @@ CakePlugin::load('DebugKit');
  *
  **/
 //CakePlugin::loadAll();
-
-
+CakePlugin::load('Users', array(
+    'routes' => true
+));
 CakePlugin::load('Search');
 CakePlugin::load('Migrations');
 CakePlugin::load('Comments');
 CakePlugin::load('Ratings');
 CakePlugin::load('Tags');
-CakePlugin::load('Users', array(
-    'routes' => true
-));
+
 Configure::write('Users.disableSlugs', true);
 
 Configure::write('Users.roles', array(

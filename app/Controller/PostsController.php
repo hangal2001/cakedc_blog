@@ -4,17 +4,18 @@
 class PostsController extends AppController {
 
     public $helpers = array('Html', 'Form', 'Session','Ratings.Rating');
-    public $components = array('Session','Auth','Search.Prg','Ratings.Ratings','Comments.Comments' => array(
-        'userModelClass' => '' // Customize the User class
+    public $components = array('Session','Auth','Search.Prg','Paginator','Ratings.Ratings','Comments.Comments' => array(
+        'userModelClass' => 'Users.User' // Customize the User class
     ));
     public $actsAs = array('Ratings.Ratable');
 
-    public function callback_commentsAdd($modelId, $commentId, $displayType, $data = array()) {
+
+   /** public function callback_commentsAdd($modelId, $commentId, $displayType, $data = array()) {
         if (!empty($this->request->data)) {
 
             ///perform some validation and field manipulations here. all value need to store into the $data.
             $data['Comment']['author_name'] = $this->Auth->user('username');
-            $data['Comment']['author_email'] = $this->Auth->user('email');
+            //$data['Comment']['author_email'] = $this->Auth->user('email');
 
             $valid = true;
             if (empty($this->request->data['Comment']['author_name'])) {
@@ -27,8 +28,18 @@ class PostsController extends AppController {
 
         }
         return $this->Comments->callback_add($modelId, $commentId, $displayType, $data);
-    }
+    }**/
 
+
+    public $displayField = 'username';
+
+    public function beforeFilter(){
+
+        $this->Comments->viewVariable = 'posts';
+        $this->Comments->actionNames = array('view');
+        parent::beforeFilter();
+
+    }
 
     public function index() {
         
@@ -60,10 +71,9 @@ class PostsController extends AppController {
 
 
      public function view($id) {
-        // $fullName = 'PLuginName.Post'; if comment used in post of pluin
 
-         //$data = $this->Post->findById($id);
-        // $this->set('posts',$data);
+         $data['Comment']['author_name'] = $this->Auth->user('username');
+
          if (!$this->Post->exists($id)) {
              throw new NotFoundException(__('Invalid post'));
          }

@@ -1,12 +1,13 @@
 <?php
 
+App::uses('User', 'Users.Model');
 
 
 class TopicsController extends AppController {
 
     public $helpers = array('Html', 'Form', 'Session','Time','Text','I18n.I18n');
-    public $components = array('Session','Auth','Cookie','Paginator','Security','Search.Prg','Comments.Comments' =>
-array('userModelClass' => 'Users.users'));
+    public $components = array('Session','Auth','Cookie','Paginator','Security','Users.RememberMe' => array(
+        'userModel' => 'AppUser'),'Search.Prg','Comments.Comments' => array('userModelClass' => 'Users.Users'));
 
     public $actsAs = array(
         'Translate'=> array(
@@ -23,10 +24,12 @@ array('userModelClass' => 'Users.users'));
 
 
     public function beforeFilter(){
-  
-        $this->Auth->allow('index');
 
         parent::beforeFilter();
+        $this->User = ClassRegistry::init('Users.User');
+        $this->Auth->allow('index');
+        $this->Auth->allow('view');
+        $this->RememberMe->restoreLoginFromCookie();
         $this->Comments->viewVariable = 'topics';
 
     }
@@ -87,9 +90,11 @@ array('userModelClass' => 'Users.users'));
     }
     public function view($id){
 
-       // $this->set('topics', $this->Topic->read($id));
-       $data = $this->Topic->findById($id);
-       $this->set('topics', $data);
+        // $this->set('topics', $this->Topic->read($id));
+        $data = $this->Topic->findById($id);
+        $this->set('topics', $data);
+        $this->set('users', $data);
+
        //$this->set('topics', $this->Topic->read(null, $id));
     
     }
