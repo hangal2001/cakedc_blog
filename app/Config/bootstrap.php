@@ -73,7 +73,10 @@ CakePlugin::load('Migrations');
 CakePlugin::load('Comments');
 CakePlugin::load('Ratings');
 CakePlugin::load('Tags');
-
+CakePlugin::load('Gallery', array(
+    'bootstrap' => true,
+    'routes' => true
+));
 Configure::write('Users.disableSlugs', true);
 
 Configure::write('Users.roles', array(
@@ -83,6 +86,9 @@ Configure::write('Users.roles', array(
 
 // Disables the registration
 Configure::write('Users.allowRegistration', true);
+Configure::write('Users.disableSlugs', true);
+Configure::write('Users.emailConfig', 'default');
+Configure::write('App.defaultEmail', 'hangal2001@gmail.com');
 /**
  * To prefer app translation over plugin translation, you can set
 

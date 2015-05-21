@@ -1,6 +1,5 @@
 <?php
 App::uses('AppModel', 'Model');
-
 /**
  * Topic Model
  *
@@ -8,39 +7,43 @@ App::uses('AppModel', 'Model');
  * @property Post $Post
  */
 class Topic extends AppModel {
-
-/**
- * Display field
- *
- * @var string
- */
-	public $displayField = 'title';
-
+    /**
+     * Display field
+     *
+     * @var string
+     */
+    public $displayField = 'title';
     public $actsAs = array(
-        'Tags.Taggable','Search.Searchable'
+        'Tags.Taggable', 'Search.Searchable'
     );
-
     public $filterArgs = array(
-
         'title' => array(
-            'field' => 'title',
+            'type' => 'like'
+        ),
+        'status' => array(
             'type' => 'value'
         ),
-        array('category2' => 'category', 'type' => 'value'),
-        'email' => array(
+        'blog_id' => array(
+            'type' => 'lookup',
+            'formField' => 'blog_input',
+            'modelField' => 'title',
+            'model' => 'Blog'
+        ),
+        'search' => array(
             'type' => 'like',
-            'field' => 'email'
+            'field' => 'Article.description'
         ),
-        'visible' => array(
-            'type' => 'value'
-        ),
-
         'range' => array(
             'type' => 'expression',
             'method' => 'CreationDateRangeCondition',
             'field' => 'Topic.created BETWEEN ? AND ?'
         ),
-
+        'username' => array(
+            'type' => 'like', 'field' => array(
+                'User.username',
+                'UserInfo.first_name'
+            )
+        ),
         'tags' => array(
             'type' => 'subquery',
             'method' => 'findByTags',
@@ -54,9 +57,26 @@ class Topic extends AppModel {
             'type' => 'query',
             'method' => 'yearRange'
         ),
-
+        'enhanced_search' => array(
+            'type' => 'like',
+            'encode' => true,
+            'before' => false,
+            'after' => false,
+            'field' => array(
+                'ThisModel.name', 'OtherModel.name'
+            )
+        ),
     );
-
+    public function searchNameCondition($data = array()) {
+        $filter = $data['name'];
+        $conditions = array(
+            'OR' => array(
+                $this->alias . '.title LIKE' => '' . $this->formatLike($filter) . '',
+                $this->alias . '.id LIKE' => '' . $this->formatLike($filter) . '',
+            )
+        );
+        return $conditions;
+    }
     public function CreationDateRangeCondition($data = array()){
         if(strpos($data['range'], ' - ') !== false){
             $tmp = explode(' - ', $data['range']);
@@ -66,9 +86,7 @@ class Topic extends AppModel {
         }else{
             return array($data['range']."-01-01", $data['range']."-12-31");
         }
-
     }
-
     public function filterCategory($data, $field = null) {
         if (empty($data['category2'])) {
             return array();
@@ -78,106 +96,87 @@ class Topic extends AppModel {
             'OR' => array(
                 $this->alias . '.category LIKE' => $categoryField,
             ));
-
-
     }
-
-    public function __construct($id = false, $table = null, $ds = null) {
-        $this->statuses = array(
-            '' => __('All', true),
-            0 => __('Bid', true),
-            1 => __('Cancelled', true),
-            2 => __('Approved', true),
-            3 => __('On Setup', true),
-            4 => __('Field', true),
-            5 => __('Closed', true),
-            6 => __('Other', true));
-        parent::__construct($id, $table, $ds);
-    }
-/**
- * Validation rules
- *
- * @var array
- */
-	public $validate = array(
-		'id' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'user_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'title' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'visible' => array(
-			'notEmpty' => array(
-				'rule' => array('notEmpty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-	);
-
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
-/**
- * belongsTo associations
- *
- * @var array
- */
-	public $belongsTo = array(
-		'User' => array(
-			'className' => 'User',
-			'foreignKey' => 'user_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
-
-/**
- * hasMany associations
- *
- * @var array
- */
-	public $hasMany = array(
-		'Post' => array(
-			'className' => 'Post',
-			'foreignKey' => 'topic_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		)
-	);
-
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public $validate = array(
+        'id' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                //'allowEmpty' => false,
+                //'required' => false,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'user_id' => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
+                //'message' => 'Your custom message here',
+                //'allowEmpty' => false,
+                //'required' => false,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'title' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                //'allowEmpty' => false,
+                //'required' => false,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'visible' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                //'allowEmpty' => false,
+                //'required' => false,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+    );
+    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    /**
+     * belongsTo associations
+     *
+     * @var array
+     */
+    public $belongsTo = array(
+        'User' => array(
+            'className' => 'User',
+            'foreignKey' => 'user_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        )
+    );
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = array(
+        'Post' => array(
+            'className' => 'Post',
+            'foreignKey' => 'topic_id',
+            'dependent' => false,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
+        )
+    );
 }
