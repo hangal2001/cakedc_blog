@@ -31,6 +31,7 @@
 
 App::uses('I18nRoute', 'I18n.Routing/Route');
 
+
 Router::connect('/',
     array('controller' => 'pages', 'action' => 'display', 'home'),
     array('routeClass' => 'I18nRoute'),

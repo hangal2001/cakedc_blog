@@ -15,39 +15,32 @@ class Topic extends AppModel {
  * @var string
  */
 	public $displayField = 'title';
+
     public $actsAs = array(
-        'Tags.Taggable', 'Search.Searchable'
+        'Tags.Taggable','Search.Searchable'
     );
 
     public $filterArgs = array(
 
         'title' => array(
-            'type' => 'like'
-        ),
-        'status' => array(
+            'field' => 'title',
             'type' => 'value'
         ),
-        'blog_id' => array(
-            'type' => 'lookup',
-            'formField' => 'blog_input',
-            'modelField' => 'title',
-            'model' => 'Blog'
-        ),
-        'search' => array(
+        array('category2' => 'category', 'type' => 'value'),
+        'email' => array(
             'type' => 'like',
-            'field' => 'Article.description'
+            'field' => 'email'
         ),
+        'visible' => array(
+            'type' => 'value'
+        ),
+
         'range' => array(
             'type' => 'expression',
             'method' => 'CreationDateRangeCondition',
             'field' => 'Topic.created BETWEEN ? AND ?'
         ),
-        'username' => array(
-            'type' => 'like', 'field' => array(
-                'User.username',
-                'UserInfo.first_name'
-            )
-        ),
+
         'tags' => array(
             'type' => 'subquery',
             'method' => 'findByTags',
@@ -61,27 +54,8 @@ class Topic extends AppModel {
             'type' => 'query',
             'method' => 'yearRange'
         ),
-        'enhanced_search' => array(
-            'type' => 'like',
-            'encode' => true,
-            'before' => false,
-            'after' => false,
-            'field' => array(
-                'ThisModel.name', 'OtherModel.name'
-            )
-        ),
-    );
 
-    public function searchNameCondition($data = array()) {
-        $filter = $data['name'];
-        $conditions = array(
-            'OR' => array(
-                $this->alias . '.title LIKE' => '' . $this->formatLike($filter) . '',
-                $this->alias . '.id LIKE' => '' . $this->formatLike($filter) . '',
-            )
-        );
-        return $conditions;
-    }
+    );
 
     public function CreationDateRangeCondition($data = array()){
         if(strpos($data['range'], ' - ') !== false){
@@ -106,6 +80,19 @@ class Topic extends AppModel {
             ));
 
 
+    }
+
+    public function __construct($id = false, $table = null, $ds = null) {
+        $this->statuses = array(
+            '' => __('All', true),
+            0 => __('Bid', true),
+            1 => __('Cancelled', true),
+            2 => __('Approved', true),
+            3 => __('On Setup', true),
+            4 => __('Field', true),
+            5 => __('Closed', true),
+            6 => __('Other', true));
+        parent::__construct($id, $table, $ds);
     }
 /**
  * Validation rules

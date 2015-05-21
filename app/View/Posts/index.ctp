@@ -7,7 +7,7 @@
     <th>Post body</th>
 
 </tr>
-    
+
 <?php foreach($posts as $post) : ?>
 <tr>
     <td><?php echo $this->HTML->link($post['Post']['id'], array('controller' => 'posts', 'action' => 'view', $post['Post']['id'])); ?></td>

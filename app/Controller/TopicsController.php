@@ -1,33 +1,20 @@
 <?php
 
-App::uses('User', 'Users.Model');
+App::uses('Users', 'Users.Model');
 
 
 class TopicsController extends AppController {
 
     public $helpers = array('Html', 'Form', 'Session','Time','Text','I18n.I18n');
     public $components = array('Session','Auth','Cookie','Paginator','Security','Search.Prg','Comments.Comments' => array('userModelClass' => 'Users.User'));
-
-    public $actsAs = array(
-        'Translate'=> array(
-            'title'
-        ));
-
-    public $paginate = array(
-        'limit' => 6,
-        'order' => array(
-            'Topics.title' => 'asc'
-        )
-    );
-
-    public $translateTable = 'post_translations';
+    public $presetVars = true;
+    public $name = 'Topics';
 
     public function find() {
         $this->Prg->commonProcess();
         $this->Paginator->settings['conditions'] = $this->Topics->parseCriteria($this->Prg->parsedParams());
         $this->set('topics', $this->Paginator->paginate());
     }
-
 
     public function beforeFilter(){
 
@@ -41,35 +28,6 @@ class TopicsController extends AppController {
 
     }
 
-    protected function _setupPagination() {
-        $this->Paginator->settings = array(
-            'limit' => 5,
-            'order' => array(
-                'Topic.title' => 'asc'
-            )
-        );
-    }
-
-    public function url($url = null, $full = false) {
-        if (is_array($url) && !array_key_exists('lang', $url)) {
-            $url['lang'] = Configure::read('Config.language');
-        }
-        return parent::url($url, $full);
-    }
-
-    public $presetVars = array(
-        'title' => array(
-            'type' => 'value'
-        ),
-        array('category2' => 'category', 'type' => 'value'),
-        'email' => array(
-            'type' => 'like',
-            'field' => 'email'
-        ),
-        'visible' => array(
-            'type' => 'value'
-        )
-    );
 
     public function filterTitle(){
         if(empty($data['title'])){
@@ -82,10 +40,45 @@ class TopicsController extends AppController {
                 $this->alias . '.content LIKE' => $title,
             ));
     }
+    public function searchNameCondition($data = array()) {
+        $filter = $data['name'];
+        $conditions = array(
+            'OR' => array(
+                $this->alias . '.title LIKE' => '' . $this->formatLike($filter) . '',
+                $this->alias . '.id LIKE' => '' . $this->formatLike($filter) . '',
+            )
+        );
+        return $conditions;
+    }
+
+    protected function _setupPagination() {
+        $this->Paginator->settings = array(
+            'limit' => 5,
+            'order' => array(
+                'Topic.title' => 'asc'
+            )
+        );
+    }
+
+    public $paginate = array(
+        'limit' => 8,
+        'order' => array(
+            'Topics.title' => 'asc'
+        )
+    );
+
+    public function url($url = null, $full = false) {
+        if (is_array($url) && !array_key_exists('lang', $url)) {
+            $url['lang'] = Configure::read('Config.language');
+        }
+        return parent::url($url, $full);
+    }
+
+
     public function index() {
 
-        $this->set('topics', $this->Topic->find('all'));
-        $this->Prg->commonProcess();
+       // $this->set('topics', $this->Topic->find('all'));
+         $this->Prg->commonProcess();
         $this->paginate = array(
             'conditions' => $this->Topic->parseCriteria($this->passedArgs));
         $this->set('topics',$this->Paginator->paginate($this->Topic));

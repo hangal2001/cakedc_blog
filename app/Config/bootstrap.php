@@ -67,9 +67,7 @@ CakePlugin::load('DebugKit');
  *
  **/
 //CakePlugin::loadAll();
-CakePlugin::load('Users', array(
-    'routes' => true
-));
+CakePlugin::load('Users');
 CakePlugin::load('Search');
 CakePlugin::load('Migrations');
 CakePlugin::load('Comments');

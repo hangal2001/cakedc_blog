@@ -4,19 +4,21 @@
 <?php echo $this->HTML->link('Create a topic', array('controller' => 'topics', 'action'=> 'add')); ?>
 <br>
 
-<?php
-    echo $this->I18n->flagSwitcher(array(
-        'class' => 'languages',
-        'id' => 'language-switcher'
-    ));
 
-    $searchItem = "title";
-    echo $this->Form->create();
-    echo $this->Form->input($searchItem);
-    echo $this->Form->input('visible', array(
-            'type' => 'checkbox'
-        ));
-    echo $this->Form->input('from', array(
+<?php
+		 echo $this->I18n->flagSwitcher(array(
+                'class' => 'languages',
+                'id' => 'language-switcher'
+            ));
+
+?>
+   <div><?php
+           echo $this->Form->create('Topic', array(
+               'url' => array_merge(array('action' => 'index'), $this->params['pass'])
+               ));
+           echo $this->Form->input('name', array('empty' => true)); // empty creates blank option.
+           echo $this->Form->submit(__('Search', false), array('div' => false));
+     echo $this->Form->input('from', array(
             'type' => 'date',
             //'div' => false,
             'dateFormat' => 'MDY',
@@ -48,8 +50,9 @@
                 ),
             'empty' => false
             ));
-    echo $this->Form->end(__('Search'));
-    ?>
+            echo $this->Form->end();
+       ?>
+  </div>
 
 	<p><?php
 	echo $this->Paginator->counter(array(
@@ -64,7 +67,7 @@
         <th><?php echo $this->Paginator->sort('Published'); ?></th>
         <th><?php echo $this->Paginator->sort('Created'); ?></th>
         <th><?php echo $this->Paginator->sort('Modified'); ?></th>
-        <th class="actions"><?php echo __d('users', 'Actions'); ?></th>
+        <th class="actions"><?php echo __d('topics', 'Actions'); ?></th>
 </tr>
 <?php
 	$i = 0; ?>
